@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Journal · A Time to Remember</title>
+</head>
+<body>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: SWISStours site chrome around a single tour page; one deliberate light brand look (white, warm stone neutrals, SWISS red). */
+:root{
+  --paper:#FFFFFF; --stone:#F5F4F1; --line:#E6E3DE; --line-2:#D9D5CE;
+  --ink:#141414; --ink-2:#3A3A3A; --muted:#5C5C5C; --faint:#B9B5AD; --red:#D12026; --red-dark:#A9171C;
+  --sans:'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --serif:'Instrument Serif', Georgia, 'Times New Roman', serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+a{color:var(--ink)} a:hover{color:var(--red)}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:4px}
+h1,h2,h3{text-wrap:balance}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:32px}
+@media (max-width:640px){.wrap{padding-inline:16px}}
+
+/* Concept bar (presentation only) */
+.concept{background:var(--ink);color:#E9E6E1;font-size:13px}
+.concept .wrap{display:flex;gap:8px 20px;align-items:center;flex-wrap:wrap;min-height:40px;padding-block:6px}
+.concept b{color:#FFFFFF;font-weight:600}
+.concept nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.concept nav a{color:#E9E6E1;text-decoration:none;padding:4px 10px;border-radius:999px;border:1px solid #4A4744}
+.concept nav a[aria-current="page"]{background:#FFFFFF;color:var(--ink);border-color:#FFFFFF}
+.concept nav a:hover{border-color:#FFFFFF;color:#FFFFFF}
+.concept nav a[aria-current="page"]:hover{color:var(--ink)}
+
+/* Site header */
+.site{border-bottom:1px solid var(--line);background:var(--paper)}
+.site .wrap{height:72px;display:flex;align-items:center;gap:36px}
+.site .logo{display:block;line-height:0}
+.site .logo svg{height:24px;width:auto;display:block}
+.site nav{display:flex;gap:26px;font-size:15px;flex:1;flex-wrap:wrap}
+.site nav a{text-decoration:none;color:#4A4A4A}
+.site nav a.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--red);padding-bottom:4px}
+.site .phone{font-size:14px;color:#4A4A4A;text-decoration:none;white-space:nowrap}
+.site .menu{display:none;width:44px;height:44px;border:0;background:none;margin-left:auto;align-items:center;justify-content:center}
+@media (max-width:980px){.site nav,.site .phone{display:none}.site .menu{display:flex}.site .wrap{height:60px}.site .logo svg{height:20px}}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;border:0;cursor:pointer}
+.btn-red{background:var(--red);color:#FFFFFF}
+.btn-red:hover{background:var(--red-dark);color:#FFFFFF}
+.btn-line{background:var(--paper);color:var(--ink);border:1px solid var(--line-2);font-weight:600;font-size:14px}
+.btn-line:hover{border-color:var(--ink);color:var(--ink)}
+.icon{width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Mobile sticky booking bar */
+.mbar{display:none}
+@media (max-width:900px){
+  .mbar{display:flex;position:sticky;bottom:0;z-index:20;align-items:center;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(20,20,20,.06)}
+  .mbar .p{flex:1;display:flex;flex-direction:column;line-height:1.2}
+  .mbar .p small{font-size:12px;color:var(--muted)}
+  .mbar .p b{font-size:21px}
+  .mbar .wa{width:46px;padding:0}
+}
+
+.site-foot{border-top:1px solid var(--line);margin-top:72px}
+.site-foot .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:28px 40px;font-size:13px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;padding-block:64px 48px}
+.eyebrow{margin:0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(52px,8vw,100px);line-height:.95;letter-spacing:-.02em}
+h1 em{font-style:italic}
+.lede{margin:0;font-size:19px;line-height:1.5;color:var(--ink-2);max-width:36em}
+.facts{margin:0;font-size:15px;color:var(--muted)}
+.strip-wrap{overflow-x:auto;padding-bottom:56px}
+.strip,.brackets{min-width:880px;display:grid;grid-template-columns:repeat(10,minmax(0,1fr))}
+.strip{border-top:2px solid var(--ink)}
+.strip a{text-decoration:none;color:var(--ink);padding:14px 10px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.strip a:hover .nn{color:var(--red)}
+.nn{font-family:var(--serif);font-size:34px;line-height:1}
+.strip small{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.strip b{font-size:14px;line-height:1.3}
+.brackets{margin-top:4px}
+.brackets div{padding-right:6px}
+.brackets i{display:block;height:6px;border-radius:3px;background:var(--ink)}
+.brackets .paris i{background:var(--red)}
+.brackets .end i{background:none;border:1px dashed var(--faint);box-sizing:border-box}
+.brackets span{display:block;font-size:13px;padding-top:8px}
+.secbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--ink);color:#FFFFFF}
+.secbar .wrap{min-height:66px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding-block:8px}
+.secbar nav{display:flex;gap:22px;flex:1;flex-wrap:wrap;font-size:15px}
+.secbar nav a{color:#D9D5CE;text-decoration:none}
+.secbar nav a:hover,.secbar nav a.on{color:#FFFFFF}
+.secbar .from{font-size:14px;color:#D9D5CE}
+.secbar .from b{color:#FFFFFF;font-size:20px}
+@media (max-width:900px){.secbar .from,.secbar .btn{display:none}.secbar nav{overflow-x:auto;flex-wrap:nowrap;white-space:nowrap}}
+section{scroll-margin-top:80px}
+h2{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(40px,5vw,56px);line-height:1}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-bottom:24px}
+.linkbtn{background:none;border:0;padding:10px 0;font-size:15px;font-weight:600;text-decoration:underline;text-underline-offset:4px;cursor:pointer;color:var(--ink)}
+#itinerary{padding-block:72px 24px}
+.tl{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:140px minmax(0,1fr);gap:32px}
+.stay .lab{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--red);padding-top:18px}
+.stay{padding-block:28px 14px}
+.staybox{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 20px;padding:16px 20px;background:var(--stone);border-radius:12px}
+.staybox b{font-size:18px}
+.staybox span{font-size:14px;color:var(--ink-2)}
+.staybox small{font-size:13px;color:var(--muted)}
+.day{border-top:1px solid var(--line)}
+.day .num{padding-block:24px;display:flex;flex-direction:column;gap:4px}
+.day .num .nn{font-size:72px;line-height:.9}
+.day .num small{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.day .content{padding-block:24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.toggle{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+.toggle b{display:block;font-size:28px;letter-spacing:-.01em;line-height:1.15}
+.toggle span.r{display:block;font-size:15px;color:var(--muted);margin-top:6px}
+.toggle .pm{flex:0 0 40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--line-2)}
+.tag.dark{background:var(--ink);border-color:var(--ink);color:#FFFFFF}
+.detail{display:flex;flex-direction:column;gap:16px;max-width:760px}
+.detail p{margin:0;font-size:17px;line-height:1.7;color:#2A2A2A}
+.inc{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px}
+.inc li{display:flex;align-items:center;gap:6px;font-size:14px}
+.inc svg{width:16px;height:16px;fill:none;stroke:var(--red);stroke-width:2.4}
+.optrow{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:12px 16px;border:1px dashed var(--faint);border-radius:10px;font-size:14px}
+.note{margin:0;font-size:14px;color:var(--muted);font-style:italic}
+@media (max-width:700px){
+  .row{grid-template-columns:56px minmax(0,1fr);gap:14px}
+  .day .num .nn{font-size:44px}
+  .day .num small{font-size:11px}
+  .toggle b{font-size:21px}
+  .stay .lab{padding-top:14px;font-size:11px}
+  .detail p{font-size:16px}
+}
+.block{padding-block:72px;border-top:2px solid var(--ink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px}
+.list{list-style:none;margin:20px 0 0;padding:0}
+.list li{padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;line-height:1.5;display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px}
+.list svg{width:18px;height:18px;margin-top:3px;fill:none;stroke:var(--red);stroke-width:2.4}
+.list.no li{color:var(--ink-2)}
+.list.no svg{stroke:#8C8C8C;stroke-width:2.2}
+.know{margin-top:20px;background:var(--stone);border-radius:12px;padding:20px;font-size:14px;line-height:1.6}
+.know b{display:block;font-size:15px;margin-bottom:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:28px}
+.card{border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.card small{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.card b{font-size:19px;line-height:1.25}
+.card p{margin:0;font-size:14px;color:var(--muted);line-height:1.5;flex:1}
+.card footer{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:10px}
+.card footer strong{font-size:20px}
+.roomsel{display:flex;gap:6px;flex-wrap:wrap}
+.roomsel button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);background:var(--paper);font-size:14px;font-weight:600;cursor:pointer}
+.roomsel button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#FFFFFF}
+.mrow{display:grid;grid-template-columns:170px minmax(0,1fr);gap:24px;padding-block:18px;border-bottom:1px solid var(--line);align-items:center}
+.mrow>span{font-family:var(--serif);font-size:28px}
+.mrow>div{display:flex;flex-wrap:wrap;gap:8px}
+.dep{min-width:116px;padding:10px 14px;border-radius:10px;border:1px solid var(--line-2);background:var(--paper);display:flex;flex-direction:column;gap:2px;text-align:left;cursor:pointer}
+.dep b{font-size:15px}
+.dep span{font-size:13px;color:var(--muted)}
+.dep span strong{color:var(--ink)}
+.dep[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#FFFFFF}
+.dep[aria-pressed="true"] span,.dep[aria-pressed="true"] span strong{color:#FFFFFF}
+@media (max-width:640px){.mrow{grid-template-columns:minmax(0,1fr);gap:10px}.dep{min-width:0;flex:1 1 40%}}
+.selbox{margin-top:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:20px 24px;border-radius:14px;background:var(--stone)}
+.selbox small{display:block;font-size:14px;color:var(--muted)}
+.selbox b{font-size:30px}
+.selbox div.a{display:flex;gap:8px;flex-wrap:wrap}
+.fine{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.site-foot{margin-top:0}
+</style>
+
+<div class="concept" role="region" aria-label="Design concept">
+  <div class="wrap">
+    <span><b>SWISStours</b> · tour page redesign · concept B</span>
+    <nav aria-label="Design directions">
+      <a href="route.html" >A · The Route</a>
+      <a href="journal.html" aria-current="page">B · The Journal</a>
+      <a href="planner.html" >C · The Planner</a>
+    </nav>
+  </div>
+</div>
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="https://www.swisstours.com/" aria-label="SWISStours home"><svg role="img" aria-label="SWISStours" width="229" height="26" viewBox="0 0 229 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.76 20.22C1.69 20.06 1.66 19.89 1.66 19.73C1.66 19.56 1.74 19.42 1.90 19.30C2.07 19.18 2.42 19.07 2.97 18.95C3.51 18.81 4.04 18.69 4.56 18.59C5.08 18.50 5.52 18.45 5.90 18.45C6.09 18.45 6.22 18.55 6.29 18.73C6.57 19.32 6.89 19.82 7.25 20.22C7.62 20.62 8.02 20.95 8.45 21.21C8.90 21.45 9.36 21.62 9.83 21.74C10.30 21.84 10.77 21.88 11.24 21.88C12.30 21.88 13.21 21.64 13.97 21.14C14.74 20.64 15.13 19.84 15.13 18.73C15.13 17.79 14.80 17.07 14.14 16.58C13.51 16.06 12.70 15.63 11.74 15.30C10.79 14.97 9.76 14.67 8.62 14.38C7.49 14.10 6.44 13.72 5.48 13.25C4.53 12.76 3.73 12.11 3.07 11.31C2.44 10.48 2.12 9.37 2.12 7.98C2.12 6.85 2.34 5.85 2.79 4.98C3.26 4.10 3.90 3.37 4.70 2.78C5.50 2.17 6.43 1.71 7.49 1.40C8.58 1.10 9.74 0.94 10.99 0.94C13.05 0.94 14.86 1.38 16.44 2.25C18.02 3.10 19.16 4.39 19.87 6.11C19.94 6.30 19.98 6.45 19.98 6.57C19.98 6.73 19.87 6.87 19.66 6.99C19.47 7.09 19.11 7.19 18.56 7.31C18.02 7.43 17.49 7.54 16.97 7.63C16.48 7.72 16.05 7.77 15.70 7.77C15.46 7.77 15.30 7.64 15.20 7.38C14.71 6.37 14.06 5.67 13.26 5.30C12.46 4.89 11.61 4.69 10.71 4.69C9.72 4.69 8.87 4.94 8.16 5.44C7.46 5.93 7.10 6.67 7.10 7.66C7.10 8.32 7.29 8.88 7.67 9.33C8.05 9.75 8.53 10.12 9.12 10.42C9.73 10.73 10.43 10.99 11.21 11.20C11.98 11.41 12.77 11.64 13.58 11.87C14.40 12.11 15.20 12.38 15.98 12.69C16.78 12.99 17.48 13.38 18.07 13.85C18.68 14.33 19.18 14.90 19.55 15.59C19.93 16.27 20.12 17.11 20.12 18.10C20.12 19.25 19.88 20.28 19.41 21.18C18.94 22.05 18.29 22.78 17.47 23.37C16.67 23.96 15.71 24.41 14.60 24.71C13.52 25 12.34 25.14 11.07 25.14C10.03 25.14 9.04 25.03 8.09 24.82C7.15 24.61 6.27 24.30 5.44 23.90C4.64 23.50 3.92 22.99 3.28 22.38C2.65 21.76 2.14 21.05 1.76 20.22ZM32.01 21.25H32.15L35.27 5.58L35.80 1.62C35.87 1.26 36.11 1.09 36.54 1.09H41.07C41.54 1.09 41.81 1.26 41.88 1.62L42.44 5.58L45.59 21.25H45.73L49.09 5.51L49.73 1.58C49.80 1.23 50.03 1.05 50.40 1.05C50.61 1.05 50.85 1.05 51.11 1.05C51.39 1.05 51.75 1.07 52.17 1.12L53.97 1.19C54.52 1.26 54.79 1.45 54.79 1.76C54.79 1.83 54.78 1.91 54.75 2.01C54.73 2.08 54.69 2.18 54.65 2.32L53.80 5.37L49.70 21.78C49.58 22.34 49.47 22.81 49.38 23.19C49.31 23.54 49.25 23.84 49.20 24.08C49.15 24.29 49.09 24.45 49.02 24.57C48.98 24.66 48.92 24.75 48.85 24.82C48.73 24.91 48.60 24.97 48.46 25C48.32 25 48.12 25 47.86 25H43.51C43.10 25 42.83 24.94 42.69 24.82C42.62 24.75 42.56 24.66 42.52 24.57C42.47 24.45 42.41 24.29 42.34 24.08C42.29 23.86 42.23 23.58 42.16 23.23C42.11 22.85 42.06 22.37 41.98 21.78L38.84 6.64H38.70L35.55 21.78C35.48 22.37 35.41 22.85 35.34 23.23C35.29 23.58 35.24 23.88 35.19 24.11C35.15 24.32 35.09 24.48 35.02 24.57C34.97 24.66 34.91 24.75 34.84 24.82C34.72 24.91 34.59 24.97 34.45 25C34.31 25 34.11 25 33.85 25H29.50C29.10 25 28.83 24.94 28.69 24.82C28.62 24.75 28.56 24.66 28.51 24.57C28.46 24.45 28.40 24.29 28.33 24.08C28.29 23.86 28.22 23.58 28.12 23.23C28.05 22.85 27.96 22.37 27.84 21.78L23.74 5.37L22.92 2.32C22.87 2.18 22.83 2.08 22.78 2.01C22.76 1.91 22.74 1.83 22.74 1.76C22.74 1.45 23.02 1.26 23.56 1.19L25.43 1.12C25.86 1.07 26.20 1.05 26.46 1.05C26.74 1.05 26.99 1.05 27.20 1.05C27.63 1.05 27.87 1.23 27.94 1.58L28.58 5.51L32.01 21.25ZM63.43 24.68C63.43 24.75 63.40 24.81 63.33 24.85C63.28 24.88 63.16 24.90 62.97 24.92C62.81 24.95 62.56 24.97 62.23 25C61.90 25 61.45 25 60.88 25C60.34 25 59.91 25 59.58 25C59.25 24.97 58.99 24.95 58.80 24.92C58.63 24.90 58.52 24.88 58.44 24.85C58.40 24.81 58.37 24.75 58.37 24.68L58.52 20.50V3.35L58.37 1.40C58.37 1.36 58.40 1.31 58.44 1.26C58.52 1.22 58.63 1.18 58.80 1.16C58.99 1.13 59.25 1.12 59.58 1.12C59.91 1.10 60.34 1.09 60.88 1.09C61.45 1.09 61.90 1.10 62.23 1.12C62.56 1.12 62.81 1.13 62.97 1.16C63.16 1.18 63.28 1.22 63.33 1.26C63.40 1.31 63.43 1.36 63.43 1.40L63.29 3.35V20.50L63.43 24.68ZM67.90 20.22C67.83 20.06 67.79 19.89 67.79 19.73C67.79 19.56 67.87 19.42 68.04 19.30C68.20 19.18 68.56 19.07 69.10 18.95C69.64 18.81 70.17 18.69 70.69 18.59C71.21 18.50 71.66 18.45 72.03 18.45C72.22 18.45 72.35 18.55 72.42 18.73C72.71 19.32 73.02 19.82 73.38 20.22C73.76 20.62 74.16 20.95 74.58 21.21C75.03 21.45 75.49 21.62 75.96 21.74C76.43 21.84 76.90 21.88 77.37 21.88C78.44 21.88 79.34 21.64 80.10 21.14C80.88 20.64 81.26 19.84 81.26 18.73C81.26 17.79 80.93 17.07 80.27 16.58C79.64 16.06 78.84 15.63 77.87 15.30C76.93 14.97 75.89 14.67 74.76 14.38C73.63 14.10 72.58 13.72 71.61 13.25C70.67 12.76 69.86 12.11 69.20 11.31C68.57 10.48 68.25 9.37 68.25 7.98C68.25 6.85 68.47 5.85 68.92 4.98C69.39 4.10 70.03 3.37 70.83 2.78C71.63 2.17 72.56 1.71 73.63 1.40C74.71 1.10 75.88 0.94 77.13 0.94C79.18 0.94 80.99 1.38 82.57 2.25C84.15 3.10 85.30 4.39 86.00 6.11C86.07 6.30 86.11 6.45 86.11 6.57C86.11 6.73 86.00 6.87 85.79 6.99C85.60 7.09 85.24 7.19 84.70 7.31C84.15 7.43 83.62 7.54 83.10 7.63C82.61 7.72 82.18 7.77 81.83 7.77C81.59 7.77 81.43 7.64 81.34 7.38C80.84 6.37 80.19 5.67 79.39 5.30C78.59 4.89 77.74 4.69 76.84 4.69C75.85 4.69 75.00 4.94 74.30 5.44C73.59 5.93 73.24 6.67 73.24 7.66C73.24 8.32 73.42 8.88 73.80 9.33C74.18 9.75 74.66 10.12 75.25 10.42C75.87 10.73 76.56 10.99 77.34 11.20C78.12 11.41 78.91 11.64 79.71 11.87C80.53 12.11 81.34 12.38 82.11 12.69C82.92 12.99 83.61 13.38 84.20 13.85C84.81 14.33 85.31 14.90 85.69 15.59C86.06 16.27 86.25 17.11 86.25 18.10C86.25 19.25 86.02 20.28 85.54 21.18C85.07 22.05 84.42 22.78 83.60 23.37C82.80 23.96 81.84 24.41 80.73 24.71C79.65 25 78.47 25.14 77.20 25.14C76.16 25.14 75.17 25.03 74.23 24.82C73.28 24.61 72.40 24.30 71.57 23.90C70.77 23.50 70.05 22.99 69.42 22.38C68.78 21.76 68.27 21.05 67.90 20.22ZM90.01 20.22C89.94 20.06 89.90 19.89 89.90 19.73C89.90 19.56 89.99 19.42 90.15 19.30C90.32 19.18 90.67 19.07 91.21 18.95C91.75 18.81 92.28 18.69 92.80 18.59C93.32 18.50 93.77 18.45 94.15 18.45C94.34 18.45 94.47 18.55 94.54 18.73C94.82 19.32 95.14 19.82 95.49 20.22C95.87 20.62 96.27 20.95 96.69 21.21C97.14 21.45 97.60 21.62 98.07 21.74C98.54 21.84 99.02 21.88 99.49 21.88C100.55 21.88 101.46 21.64 102.21 21.14C102.99 20.64 103.38 19.84 103.38 18.73C103.38 17.79 103.05 17.07 102.39 16.58C101.75 16.06 100.95 15.63 99.98 15.30C99.04 14.97 98.00 14.67 96.87 14.38C95.74 14.10 94.69 13.72 93.72 13.25C92.78 12.76 91.98 12.11 91.32 11.31C90.68 10.48 90.36 9.37 90.36 7.98C90.36 6.85 90.59 5.85 91.03 4.98C91.51 4.10 92.14 3.37 92.94 2.78C93.75 2.17 94.68 1.71 95.74 1.40C96.82 1.10 97.99 0.94 99.24 0.94C101.29 0.94 103.11 1.38 104.69 2.25C106.27 3.10 107.41 4.39 108.12 6.11C108.19 6.30 108.22 6.45 108.22 6.57C108.22 6.73 108.12 6.87 107.91 6.99C107.72 7.09 107.35 7.19 106.81 7.31C106.27 7.43 105.74 7.54 105.22 7.63C104.72 7.72 104.30 7.77 103.94 7.77C103.71 7.77 103.54 7.64 103.45 7.38C102.95 6.37 102.31 5.67 101.50 5.30C100.70 4.89 99.85 4.69 98.96 4.69C97.97 4.69 97.12 4.94 96.41 5.44C95.70 5.93 95.35 6.67 95.35 7.66C95.35 8.32 95.54 8.88 95.92 9.33C96.29 9.75 96.78 10.12 97.37 10.42C97.98 10.73 98.67 10.99 99.45 11.20C100.23 11.41 101.02 11.64 101.82 11.87C102.65 12.11 103.45 12.38 104.23 12.69C105.03 12.99 105.72 13.38 106.31 13.85C106.93 14.33 107.42 14.90 107.80 15.59C108.18 16.27 108.37 17.11 108.37 18.10C108.37 19.25 108.13 20.28 107.66 21.18C107.19 22.05 106.54 22.78 105.71 23.37C104.91 23.96 103.96 24.41 102.85 24.71C101.76 25 100.58 25.14 99.31 25.14C98.27 25.14 97.28 25.03 96.34 24.82C95.40 24.61 94.51 24.30 93.69 23.90C92.89 23.50 92.17 22.99 91.53 22.38C90.89 21.76 90.39 21.05 90.01 20.22Z" fill="#D12026"/><path d="M111.45 10.35C111.33 10.35 111.25 10.21 111.20 9.93C111.18 9.62 111.17 9.27 111.17 8.87C111.17 8.44 111.18 8.09 111.20 7.81C111.25 7.52 111.33 7.38 111.45 7.38H113.61V6.14L113.47 3.46C113.47 3.39 113.49 3.34 113.54 3.31C113.58 3.27 113.69 3.23 113.86 3.21C114.02 3.18 114.26 3.17 114.56 3.17C114.89 3.15 115.33 3.14 115.87 3.14C116.44 3.14 116.87 3.15 117.18 3.17C117.51 3.17 117.76 3.18 117.92 3.21C118.09 3.23 118.19 3.27 118.24 3.31C118.29 3.34 118.31 3.39 118.31 3.46L118.17 6.14V7.38H122.49C122.60 7.38 122.67 7.54 122.70 7.84C122.72 8.12 122.73 8.47 122.73 8.87C122.73 9.27 122.72 9.62 122.70 9.93C122.67 10.21 122.60 10.35 122.49 10.35H118.17V19.76C118.17 20.09 118.19 20.41 118.24 20.72C118.29 21.02 118.37 21.29 118.49 21.53C118.63 21.74 118.82 21.92 119.05 22.06C119.29 22.18 119.60 22.24 119.97 22.24C120.26 22.24 120.52 22.20 120.75 22.13C121.01 22.06 121.31 21.93 121.64 21.74C121.78 21.67 121.88 21.64 121.95 21.64C122.07 21.64 122.17 21.73 122.24 21.92C122.31 22.08 122.38 22.38 122.45 22.80C122.52 23.16 122.57 23.42 122.59 23.58C122.64 23.75 122.66 23.89 122.66 24.00C122.66 24.15 122.60 24.24 122.49 24.29C121.92 24.55 121.31 24.75 120.65 24.89C120.01 25.03 119.29 25.10 118.49 25.10C116.98 25.10 115.79 24.76 114.92 24.08C114.04 23.37 113.61 22.21 113.61 20.61V10.35H111.45ZM133.56 10.60C132.29 10.60 131.34 11.11 130.70 12.12C130.09 13.14 129.78 14.59 129.78 16.47C129.78 18.33 130.09 19.78 130.70 20.82C131.34 21.84 132.29 22.34 133.56 22.34C134.86 22.34 135.82 21.84 136.43 20.82C137.07 19.78 137.38 18.33 137.38 16.47C137.38 14.59 137.07 13.14 136.43 12.12C135.82 11.11 134.86 10.60 133.56 10.60ZM133.56 7.24C135.03 7.24 136.29 7.48 137.35 7.95C138.43 8.42 139.32 9.07 140.00 9.89C140.71 10.69 141.23 11.64 141.56 12.72C141.91 13.81 142.09 14.96 142.09 16.19C142.09 17.41 141.91 18.57 141.56 19.65C141.23 20.74 140.71 21.69 140.00 22.52C139.32 23.32 138.43 23.96 137.35 24.43C136.29 24.90 135.03 25.14 133.56 25.14C132.10 25.14 130.84 24.90 129.78 24.43C128.72 23.96 127.83 23.32 127.13 22.52C126.44 21.69 125.93 20.74 125.57 19.65C125.24 18.57 125.08 17.41 125.08 16.19C125.08 14.96 125.24 13.81 125.57 12.72C125.93 11.64 126.44 10.69 127.13 9.89C127.83 9.07 128.72 8.42 129.78 7.95C130.84 7.48 132.10 7.24 133.56 7.24ZM145.99 7.70C145.99 7.63 146.02 7.58 146.06 7.56C146.11 7.51 146.22 7.48 146.38 7.45C146.55 7.43 146.8 7.42 147.13 7.42C147.46 7.39 147.89 7.38 148.43 7.38C149.00 7.38 149.44 7.39 149.74 7.42C150.07 7.42 150.31 7.43 150.45 7.45C150.62 7.48 150.72 7.51 150.77 7.56C150.82 7.58 150.84 7.63 150.84 7.70L150.70 9.79V17.39C150.70 17.98 150.72 18.59 150.77 19.23C150.84 19.87 151.03 20.42 151.33 20.89C151.57 21.25 151.86 21.54 152.22 21.78C152.6 21.99 153.09 22.09 153.70 22.09C155.02 22.09 155.97 21.62 156.53 20.68C157.10 19.74 157.38 18.37 157.38 16.58V9.79L157.24 7.70C157.24 7.63 157.26 7.58 157.31 7.56C157.36 7.51 157.46 7.48 157.63 7.45C157.79 7.43 158.03 7.42 158.34 7.42C158.67 7.39 159.12 7.38 159.68 7.38C160.25 7.38 160.68 7.39 160.99 7.42C161.32 7.42 161.57 7.43 161.73 7.45C161.90 7.48 162.00 7.51 162.05 7.56C162.10 7.58 162.12 7.63 162.12 7.70L161.98 9.79V21.25L162.12 24.68C162.12 24.75 162.10 24.81 162.05 24.85C162.00 24.88 161.90 24.90 161.73 24.92C161.59 24.95 161.36 24.97 161.03 25C160.72 25 160.28 25 159.72 25C159.17 25 158.74 25 158.41 25C158.10 24.97 157.87 24.95 157.70 24.92C157.54 24.90 157.43 24.88 157.38 24.85C157.36 24.81 157.35 24.75 157.35 24.68L157.49 21.74C157.09 22.73 156.45 23.54 155.58 24.18C154.71 24.82 153.60 25.14 152.25 25.14C151.19 25.14 150.30 25 149.57 24.71C148.84 24.41 148.21 23.99 147.69 23.47C147.15 22.91 146.75 22.22 146.49 21.42C146.25 20.62 146.14 19.69 146.14 18.63V9.79L145.99 7.70ZM178.08 11.17C178.08 11.68 177.74 11.94 177.06 11.94C176.07 11.94 175.23 12.09 174.55 12.37C173.88 12.65 173.32 13.05 172.85 13.57C172.33 14.14 171.96 14.81 171.75 15.59C171.54 16.37 171.43 17.28 171.43 18.35V20.50L171.57 24.68C171.57 24.75 171.55 24.81 171.50 24.85C171.46 24.88 171.35 24.90 171.19 24.92C171.02 24.95 170.77 24.97 170.44 25C170.14 25 169.70 25 169.13 25C168.59 25 168.16 25 167.83 25C167.52 24.97 167.28 24.95 167.12 24.92C166.95 24.90 166.85 24.88 166.80 24.85C166.75 24.81 166.73 24.75 166.73 24.68L166.87 20.50V9.65L166.73 7.70C166.73 7.63 166.74 7.58 166.76 7.56C166.81 7.51 166.92 7.48 167.08 7.45C167.25 7.43 167.48 7.42 167.79 7.42C168.10 7.39 168.53 7.38 169.10 7.38C169.64 7.38 170.07 7.39 170.37 7.42C170.70 7.42 170.94 7.43 171.08 7.45C171.24 7.48 171.35 7.51 171.40 7.56C171.44 7.58 171.47 7.63 171.47 7.70L171.33 9.65V12.19C171.68 10.71 172.41 9.52 173.52 8.62C174.63 7.70 175.92 7.24 177.41 7.24C177.86 7.24 178.08 7.46 178.08 7.91V11.17ZM180.64 21.56C180.52 21.42 180.46 21.27 180.46 21.10C180.46 20.96 180.53 20.86 180.68 20.79C180.82 20.69 181.17 20.59 181.74 20.47C182.49 20.33 183.08 20.21 183.50 20.11C183.93 20.02 184.24 19.97 184.42 19.97C184.57 19.97 184.66 20.00 184.71 20.04C184.78 20.09 184.85 20.20 184.92 20.36C185.58 21.68 186.70 22.34 188.28 22.34C188.89 22.34 189.46 22.17 189.98 21.81C190.52 21.43 190.79 20.87 190.79 20.11C190.79 19.27 190.46 18.69 189.80 18.38C189.16 18.07 188.29 17.82 187.18 17.60C186.33 17.46 185.52 17.30 184.74 17.11C183.96 16.92 183.28 16.65 182.69 16.29C182.10 15.94 181.63 15.49 181.28 14.95C180.95 14.38 180.78 13.68 180.78 12.83C180.78 11.96 180.96 11.18 181.31 10.49C181.67 9.79 182.16 9.20 182.80 8.73C183.43 8.23 184.19 7.87 185.06 7.63C185.96 7.37 186.94 7.24 188.00 7.24C189.88 7.24 191.40 7.58 192.56 8.27C193.74 8.95 194.56 9.86 195.03 10.99C195.08 11.18 195.11 11.30 195.11 11.34C195.11 11.46 195.01 11.57 194.82 11.66C194.66 11.76 194.23 11.87 193.55 12.02C192.94 12.16 192.45 12.26 192.10 12.33C191.75 12.40 191.50 12.44 191.36 12.44C191.14 12.44 190.98 12.33 190.86 12.12C190.60 11.74 190.24 11.40 189.76 11.10C189.32 10.77 188.72 10.60 187.96 10.60C187.28 10.60 186.69 10.77 186.19 11.10C185.72 11.40 185.49 11.90 185.49 12.58C185.49 13.15 185.70 13.57 186.12 13.85C186.57 14.11 187.24 14.34 188.14 14.53C189.03 14.69 189.92 14.88 190.79 15.09C191.66 15.28 192.44 15.55 193.12 15.91C193.83 16.26 194.40 16.73 194.82 17.32C195.27 17.89 195.49 18.64 195.49 19.58C195.49 20.48 195.31 21.27 194.93 21.95C194.57 22.64 194.07 23.21 193.41 23.69C192.75 24.16 191.96 24.52 191.04 24.78C190.14 25.02 189.15 25.14 188.07 25.14C186.32 25.14 184.81 24.84 183.54 24.25C182.27 23.66 181.30 22.77 180.64 21.56Z" fill="#231F20"/><rect x="204.57" y="1.48" width="23.61" height="23.30" fill="#CF0A2B"/><rect x="213.60" y="3.42" width="5.54" height="19.42" fill="white"/><rect x="226.21" y="10.40" width="5.47" height="19.67" transform="rotate(90 226.21 10.40)" fill="white"/></svg></a>
+    <nav aria-label="Main">
+      <a href="https://www.swiss.com/US/en">Flights</a>
+      <a href="https://www.swisstours.com/apartments">Hotels</a>
+      <a href="https://www.swisstours.com/switzerland-tour-packages">Packages</a>
+      <a href="https://www.swisstours.com/swiss-travel-pass">Swiss Travel Pass</a>
+      <a href="https://www.swisstours.com/eurail-pass">European Rail</a>
+      <a href="https://www.swisstours.com/mountain-excursion">Attractions</a>
+      <a class="on" href="https://www.swisstours.com/CoachTours/CoachTours.aspx">Coach Tours</a>
+    </nav>
+    <span class="phone">Toll free 1800 20 20 052</span>
+    <button class="menu" type="button" aria-label="Menu"><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</header>
+
+
+<section class="hero wrap" aria-labelledby="t">
+  <p class="eyebrow">Italy · Austria · Switzerland · France</p>
+  <h1 id="t">A Time to <em>Remember</em></h1>
+  <p class="lede">Ten days from the Colosseum to the Eiffel Tower: Florence at sunset, Venice by boat, a cable car above Grindelwald and three nights in Paris.</p>
+  <p class="facts">10 days · 9 nights · departs every Sunday from Rome · English-speaking guide · Europamundo tour 2601970</p>
+</section>
+
+<div class="wrap strip-wrap" role="region" aria-label="Journey at a glance" tabindex="0">
+  <div class="strip" id="strip"></div>
+  <div class="brackets">
+    <div style="grid-column:span 2"><i></i><span><b>Rome</b> · 2 nights</span></div>
+    <div><i></i><span><b>Florence</b> · 1</span></div>
+    <div><i></i><span><b>Venice</b> · 1</span></div>
+    <div style="grid-column:span 2"><i></i><span><b>Zurich</b> · 2 nights</span></div>
+    <div class="paris" style="grid-column:span 3"><i></i><span><b>Paris</b> · 3 nights</span></div>
+    <div class="end"><i></i><span style="color:var(--muted)">Tour ends</span></div>
+  </div>
+</div>
+
+<div class="secbar">
+  <div class="wrap">
+    <nav aria-label="On this page"><a class="on" href="#itinerary">Itinerary</a><a href="#included">What’s included</a><a href="#extras">Optional extras</a><a href="#dates">Dates &amp; prices</a></nav>
+    <span class="from">From <b>€1,653</b> pp</span>
+    <a class="btn btn-red" href="#dates">Check dates &amp; prices</a>
+  </div>
+</div>
+
+<main class="wrap">
+  <section id="itinerary">
+    <div class="head">
+      <h2>The itinerary</h2>
+      <span style="display:flex;gap:20px;flex-wrap:wrap"><button class="linkbtn" id="all" type="button">Expand all days</button><a class="linkbtn" id="leaflet" target="_blank" rel="noopener" href="#">Europamundo leaflet</a></span>
+    </div>
+    <ol class="tl" id="tl"></ol>
+  </section>
+
+  <section id="included" class="block cols">
+    <div><h2>Included</h2><ul class="list" id="inc"></ul></div>
+    <div>
+      <h2>Not included</h2><ul class="list no" id="exc"></ul>
+      <div class="know"><b>Good to know</b>Venice nights are in the Mestre district. In exceptional circumstances (breakdowns, traffic, weather, strikes) the order of visits or sites may change. Room share pairs you with another solo traveller. Operated by Europamundo Vacations, 2026–27 brochure.</div>
+    </div>
+  </section>
+
+  <section id="extras" class="block">
+    <div class="head" style="padding-bottom:0"><h2>Optional extras</h2><p style="margin:0;font-size:14px;color:var(--muted);max-width:420px">Pre-book through Europamundo’s My Trip. Children under 3 free · 3–8 pay 60% · 9–15 get 10% off.</p></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section id="dates" class="block">
+    <div class="head">
+      <div><h2>Dates &amp; prices</h2><p style="margin:8px 0 0;font-size:15px;color:var(--muted)">Per person, EUR. Every Sunday from Rome, October 2026 to March 2027.</p></div>
+      <div class="roomsel" id="rooms" role="group" aria-label="Room type"></div>
+    </div>
+    <div id="months"></div>
+    <div class="selbox" aria-live="polite">
+      <div><small id="selSub"></small><b id="selBig"></b></div>
+      <div class="a">
+        <a class="btn btn-line" id="wa" target="_blank" rel="noopener" href="#"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.4 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12z"/></svg>Ask on WhatsApp</a>
+        <a class="btn btn-red" id="cta" target="_blank" rel="noopener" href="#">Check this date</a>
+      </div>
+    </div>
+    <p class="fine">Seats are approximate until your booking is confirmed.</p>
+  </section>
+</main>
+
+<footer class="site-foot"><div class="wrap"><span>SWISStours · A Swiss International Air Lines company</span><span>WhatsApp +41 76 654 81 51 · sales@swisstours.com</span></div></footer>
+
+<div class="mbar"><div class="p"><small id="mSub"></small><b id="mBig"></b></div><a class="btn btn-line wa" id="mwa" target="_blank" rel="noopener" href="#" aria-label="WhatsApp"><svg class="icon" style="width:20px;height:20px" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.4 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12z"/></svg></a><a class="btn btn-red" id="mcta" target="_blank" rel="noopener" href="#">Check dates</a></div>
+
+<script>
+/* Tour data: Europamundo "A Time to Remember", tour 2601970, 2026–27 brochure (from SWISStours' Europamundo embed) */
+window.TOUR = (function () {
+  const QUOTE = 'https://www.europamundo.com/eng/embed/tour_quote.aspx?rutaid=1970&temp=2026&opeIP=503&ageKEY=46770';
+  const LEAFLET = 'https://www.europamundo.com/eng/embed/tour_menu.aspx?em_multif=y&rutaid=1970&temp=2026&opeIP=503&ageKEY=46770';
+  const days = [
+    {n:1,dow:'Sun',short:'Rome',title:'Arrive in Rome',route:'Rome',night:'Rome',meals:[],
+      body:'Arrival transfer to your hotel; a notice at reception gives the time to meet your tour guide. In the evening we take you to Via Cavour, a lively street with Italian, Indian, Chinese and international restaurants.',
+      inc:['Arrival transfer','Evening transfer to Via Cavour'],opt:[],note:'',hl:['Arrival transfer','Via Cavour evening']},
+    {n:2,dow:'Mon',short:'Rome & Vatican',title:'Imperial Rome & Vatican City',route:'Rome',night:'Rome',meals:['B'],
+      body:'A three-hour guided tour on foot and by coach: the Arch of Constantine, the Colosseum (outside) and Imperial Forums, Circus Maximus, Baths of Caracalla, St Mary Major, the Pyramid of Cestius and Castel Sant’Angelo. Ends in Vatican City around 11:00. Evening transfer to Trastevere; back at the hotel around 20:30.',
+      inc:['Guided city tour','Evening transfer to Trastevere'],opt:[{name:'Vatican Museums & Sistine Chapel',len:'3 h',price:'€70'}],note:'',hl:['Colosseum (outside)','Imperial Forums','Vatican City','Trastevere evening']},
+    {n:3,dow:'Tue',short:'Florence',title:'Florence from Piazzale Michelangelo',route:'Rome → Florence',night:'Florence',meals:['B'],
+      body:'Drive north to the Piazzale Michelangelo viewpoint, then walk into the old town. After time for lunch, a local expert guides you past the Ponte Vecchio, the Duomo and Piazza della Signoria. Free evening with plenty of dinner choices.',
+      inc:['Transfer to Piazzale Michelangelo','Guided walking tour'],opt:[],note:'',hl:['Piazzale Michelangelo','Ponte Vecchio','Duomo']},
+    {n:4,dow:'Wed',short:'Venice',title:'Venice by boat',route:'Florence → Venice',night:'Venice (Mestre)',meals:['B'],
+      body:'Cross the Apennines to Venice and take a boat over the Giudecca Canal. A local guide shows you St Mark’s Square, then a visit to a Murano glass factory and free time.',
+      inc:['Boat to St Mark’s Square','Murano glass factory'],opt:[{name:'Gondola ride',len:'20 min',price:'€40'}],note:'Your hotel is in the Mestre district.',hl:['Boat on the Giudecca','St Mark’s Square','Murano glass']},
+    {n:5,dow:'Thu',short:'Innsbruck · Zurich',title:'Through the Tyrol to Zurich',route:'Venice → Innsbruck → Zurich',night:'Zurich',meals:['B'],
+      body:'Into Austria for free time and lunch in Innsbruck’s historic centre, then on through Tyrolean landscapes into Switzerland, arriving in Zurich.',
+      inc:[],opt:[],note:'',hl:['Innsbruck old town','Tyrol']},
+    {n:6,dow:'Fri',short:'Grindelwald · Lucerne',title:'Grindelwald First & Lucerne',route:'Zurich → Grindelwald → Lucerne → Zurich',night:'Zurich',meals:['B','L'],
+      body:'Into the Interlaken region: coffee in Grindelwald, then the cable car up Grindelwald First and a mountain path to a suspension bridge with glacier views. Lunch on the mountain is included. Free time in Lucerne before returning to Zurich.',
+      inc:['Grindelwald First cable car','Lunch on the mountain'],opt:[{name:'Mt Titlis full day, instead of this programme',len:'Pre-book only',price:'€185'}],note:'',hl:['Grindelwald First cable car','Glacier views','Lucerne']},
+    {n:7,dow:'Sat',short:'Strasbourg · Paris',title:'Strasbourg, then Paris',route:'Zurich → Strasbourg → Paris',night:'Paris',meals:['B'],
+      body:'Cross into Alsace for time in Strasbourg, where French and German influences meet. Continue to Paris, arriving in the evening.',
+      inc:[],opt:[],note:'',hl:['Strasbourg, Alsace']},
+    {n:8,dow:'Sun',short:'Versailles',title:'Versailles & Montmartre',route:'Paris · Versailles',night:'Paris',meals:['B'],
+      body:'The Palace of Versailles and its gardens (palace admission not included). Back in Paris, Montmartre, then a panoramic city tour with a local guide.',
+      inc:['Versailles excursion','Transfer to Montmartre','Guided panoramic tour'],opt:[{name:'Paris by Night',len:'3 h',price:'€40'},{name:'Moulin Rouge show, 23:00',len:'2 h',price:'€160'}],note:'',hl:['Versailles gardens','Montmartre','Guided city tour']},
+    {n:9,dow:'Mon',short:'Eiffel · Seine',title:'Eiffel Tower & the Seine',route:'Paris',night:'Paris',meals:['B'],
+      body:'Up to the second floor of the Eiffel Tower (tickets included), then a cruise on the Seine of about 1 h 15 min. Free afternoon; the transfer back to the hotel is not included.',
+      inc:['Eiffel Tower 2nd floor','Seine cruise'],opt:[],note:'If queues are very long, the Eiffel visit may move to another time or to Sunday.',hl:['Eiffel Tower 2nd floor','Seine cruise','Free afternoon']},
+    {n:10,dow:'Tue',short:'Departure',title:'Tour ends in Paris',route:'Paris',night:'',meals:['B'],
+      body:'After breakfast, the tour ends.',inc:[],opt:[],note:'',hl:['After breakfast']}
+  ];
+  const hotels = [
+    {first:1,city:'Rome',nights:'2 nights',list:[['Ergife',4],['Aran Park',4],['Grand Fleming',4]]},
+    {first:3,city:'Florence',nights:'1 night',list:[['Nilhotel',4],['Raffaello',4],['Novotel Firenze Nord',4]]},
+    {first:4,city:'Venice (Mestre)',nights:'1 night',list:[['Lugano Torretta',4],['Delfino',4],['Elite',4]]},
+    {first:5,city:'Zurich',nights:'2 nights',list:[['Mövenpick Airport',4],['Harry’s Home Wallisellen',4],['Radisson Hotel & Suites',3]]},
+    {first:7,city:'Paris',nights:'3 nights',list:[['Mercure Porte de Versailles Expo',4],['Mercure Ivry Quai de Seine',4],['Mercure La Défense 5',4]]}
+  ];
+  const included = [
+    'Coach travel with an English-speaking tour guide throughout',
+    '9 nights in 3★–4★ hotels with buffet breakfast',
+    'Basic travel insurance',
+    'Arrival transfer in Rome',
+    'Guided city tours of Rome, Florence, Venice and Paris',
+    'Excursion to the Palace of Versailles (admission not included)',
+    'Boat to St Mark’s Square in Venice and a cruise on the Seine',
+    'Evening transfers to Via Cavour and Trastevere in Rome',
+    'Transfers to Piazzale Michelangelo and Montmartre',
+    'Tickets: Murano glass factory and the Eiffel Tower 2nd floor',
+    'Grindelwald First cable car and lunch on the mountain'
+  ];
+  const excluded = [
+    'Flights to Rome and home from Paris',
+    'Lunches and dinners, apart from the Day 6 lunch',
+    'Admission to the Palace of Versailles',
+    'Optional excursions',
+    'Transfer back to the hotel on Day 9 afternoon'
+  ];
+  const optional = [
+    {where:'Rome · Day 2',name:'Vatican Museums & Sistine Chapel',note:'Expert guide, priority entry, St Peter’s Basilica. Minimum 20 people.',len:'3 h',price:'€70'},
+    {where:'Rome',name:'Baroque Rome: squares & fountains',note:'A guided walk through Rome’s piazzas and fountains.',len:'2 h 30',price:'€40'},
+    {where:'Venice · Day 4',name:'Gondola ride',note:'Through the canals of Venice.',len:'20 min',price:'€40'},
+    {where:'Switzerland · Day 6',name:'Mt Titlis: eternal snow & glacier',note:'Third-party operator. Replaces the Grindelwald and Lucerne programme. Pre-book only.',len:'Full day',price:'€185'},
+    {where:'Paris',name:'Paris by Night',note:'The city lit up after dark.',len:'3 h',price:'€40'},
+    {where:'Paris',name:'Moulin Rouge show, 23:00',note:'The late show at the Moulin Rouge.',len:'2 h',price:'€160'}
+  ];
+  const prices = {
+    low:{twin:1653,triple:1625,single:2439,share:1698},
+    mid:{twin:1731,triple:1702,single:2517,share:1776},
+    high:{twin:1828,triple:1797,single:2614,share:1873}
+  };
+  const seasonName = {low:'Low',mid:'Middle',high:'High'};
+  const rooms = [{k:'twin',label:'Twin / double'},{k:'triple',label:'Triple'},{k:'single',label:'Single'},{k:'share',label:'Room share'}];
+  const departures = [
+    ['Oct 2026',[['2026-10-18','high',21],['2026-10-25','high',16]]],
+    ['Nov 2026',[['2026-11-01','mid',20],['2026-11-08','mid',25],['2026-11-15','mid',24],['2026-11-22','low',20],['2026-11-29','low',20]]],
+    ['Dec 2026',[['2026-12-06','low',20],['2026-12-13','low',22],['2026-12-20','low',20],['2026-12-27','high',22]]],
+    ['Jan 2027',[['2027-01-03','low',20],['2027-01-10','low',20],['2027-01-17','low',20],['2027-01-24','low',20],['2027-01-31','low',20]]],
+    ['Feb 2027',[['2027-02-07','low',20],['2027-02-14','low',20],['2027-02-21','low',20],['2027-02-28','low',20]]],
+    ['Mar 2027',[['2027-03-07','low',20],['2027-03-14','low',22],['2027-03-21','mid',24],['2027-03-28','mid',20]]]
+  ];
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const toDate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+  const addDays = (dt, n) => new Date(dt.getTime() + n * 86400000);
+  const fmt = n => n.toLocaleString('en-US');
+  const short = dt => DOW[dt.getUTCDay()] + ' ' + dt.getUTCDate() + ' ' + MON[dt.getUTCMonth()];
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const stars = n => '★'.repeat(n);
+  const mealText = m => !m.length ? 'No meals' : m.map(x => x === 'B' ? 'Breakfast' : 'Lunch').join(', ');
+  const whatsapp = extra => 'https://wa.me/41766548151?text=' + encodeURIComponent('Hello SWISStours, I’m interested in the coach tour "A Time to Remember" (Europamundo 2601970)' + (extra ? ' — ' + extra : '') + '.');
+  return { QUOTE, LEAFLET, days, hotels, included, excluded, optional, prices, seasonName, rooms, departures,
+    MON, DOW, toDate, addDays, fmt, short, esc, stars, mealText, whatsapp };
+})();
+
+(function () {
+  const T = window.TOUR, $ = id => document.getElementById(id);
+  const S = { open: [1, 2], room: 'twin', dep: '2026-10-18' };
+  const tick = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+  const cross = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const bed = '<svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/></svg>';
+  const fork = '<svg class="icon" style="width:14px;height:14px" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 2-3 5s1 4 3 4v9"/></svg>';
+  const nn = n => String(n).padStart(2, '0');
+  const allDeps = [].concat(...T.departures.map(m => m[1]));
+  const stayFor = n => T.hotels.find(h => h.first === n);
+
+  function timeline() {
+    $('tl').innerHTML = T.days.map(d => {
+      const open = S.open.includes(d.n), st = stayFor(d.n);
+      let h = '<li id="day-' + d.n + '">';
+      if (st) h += '<div class="row stay"><span class="lab">Stay</span><div class="staybox"><b>' + T.esc(st.city) + ' · ' + st.nights + '</b><span>' + st.list.map(([n, s]) => T.esc(n) + ' ' + T.stars(s)).join(' · ') + '</span><small>or similar</small></div></div>';
+      h += '<div class="row day"><div class="num"><span class="nn">' + nn(d.n) + '</span><small>Day ' + d.n + ' · ' + d.dow + '</small></div><div class="content">' +
+        '<button type="button" class="toggle" data-day="' + d.n + '" aria-expanded="' + open + '"><span><b>' + T.esc(d.title) + '</b><span class="r">' + T.esc(d.route) + '</span></span><span class="pm" aria-hidden="true">' + (open ? '−' : '+') + '</span></button>' +
+        '<div class="tags"><span class="tag dark">' + bed + (d.night ? 'Night in ' + T.esc(d.night) : 'No overnight') + '</span><span class="tag">' + fork + T.mealText(d.meals) + '</span></div>';
+      if (open) {
+        h += '<div class="detail"><p>' + T.esc(d.body) + '</p>' +
+          (d.inc.length ? '<ul class="inc">' + d.inc.map(x => '<li>' + tick + T.esc(x) + '</li>').join('') + '</ul>' : '') +
+          d.opt.map(o => '<div class="optrow"><span><span style="color:var(--muted)">Optional · </span><b>' + T.esc(o.name) + '</b> <span style="color:var(--muted)">' + o.len + '</span></span><b>' + o.price + '</b></div>').join('') +
+          (d.note ? '<p class="note">' + T.esc(d.note) + '</p>' : '') + '</div>';
+      }
+      return h + '</div></div></li>';
+    }).join('');
+    $('all').textContent = S.open.length === 10 ? 'Collapse all days' : 'Expand all days';
+  }
+
+  function dates() {
+    $('rooms').innerHTML = T.rooms.map(r => '<button type="button" data-room="' + r.k + '" aria-pressed="' + (r.k === S.room) + '">' + r.label + '</button>').join('');
+    $('months').innerHTML = T.departures.map(([label, ds]) => '<div class="mrow"><span>' + label + '</span><div>' + ds.map(([i, s]) => { const dt = T.toDate(i), p = T.fmt(T.prices[s][S.room]); return '<button type="button" class="dep" data-dep="' + i + '" aria-pressed="' + (i === S.dep) + '"><b>Sun ' + dt.getUTCDate() + '</b><span>' + T.seasonName[s] + ' · <strong>€' + p + '</strong></span></button>'; }).join('') + '</div></div>').join('');
+    const [iso, s] = allDeps.find(x => x[0] === S.dep), dt = T.toDate(iso), end = T.addDays(dt, 9);
+    const rl = T.rooms.find(r => r.k === S.room).label, p = '€' + T.fmt(T.prices[s][S.room]);
+    $('selSub').textContent = T.short(dt) + ' → ' + T.short(end) + ' ' + end.getUTCFullYear() + ' · ' + rl + ' · ' + T.seasonName[s] + ' season';
+    $('selBig').textContent = p + ' per person';
+    $('mBig').textContent = p; $('mSub').textContent = T.short(dt) + ' · ' + rl;
+    const wa = T.whatsapp('departure ' + T.short(dt) + ' ' + dt.getUTCFullYear() + ', ' + rl);
+    ['wa','mwa'].forEach(id => $(id).href = wa);
+    ['cta','mcta'].forEach(id => $(id).href = T.QUOTE);
+  }
+
+  $('strip').innerHTML = T.days.map(d => '<a href="#day-' + d.n + '" data-jump="' + d.n + '"><span class="nn">' + nn(d.n) + '</span><small>' + d.dow + '</small><b>' + T.esc(d.short) + '</b></a>').join('');
+  $('inc').innerHTML = T.included.map(x => '<li>' + tick + '<span>' + T.esc(x) + '</span></li>').join('');
+  $('exc').innerHTML = T.excluded.map(x => '<li>' + cross + '<span>' + T.esc(x) + '</span></li>').join('');
+  $('cards').innerHTML = T.optional.map(o => '<div class="card"><small>' + T.esc(o.where) + '</small><b>' + T.esc(o.name) + '</b><p>' + T.esc(o.note) + '</p><footer><span>' + o.len + '</span><strong>' + o.price + '</strong></footer></div>').join('');
+  $('leaflet').href = T.LEAFLET;
+
+  document.addEventListener('click', e => {
+    const j = e.target.closest('[data-jump]');
+    if (j) { const n = +j.dataset.jump; if (!S.open.includes(n)) { S.open.push(n); timeline(); } return; }
+    const b = e.target.closest('[data-day],[data-room],[data-dep],#all');
+    if (!b) return;
+    if (b.id === 'all') { S.open = S.open.length === 10 ? [] : [1,2,3,4,5,6,7,8,9,10]; timeline(); return; }
+    if (b.dataset.day) { const n = +b.dataset.day; S.open = S.open.includes(n) ? S.open.filter(x => x !== n) : S.open.concat(n); timeline(); return; }
+    if (b.dataset.room) { S.room = b.dataset.room; dates(); return; }
+    if (b.dataset.dep) { S.dep = b.dataset.dep; dates(); }
+  });
+  const links = [...document.querySelectorAll('.secbar nav a')];
+  const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+  addEventListener('scroll', () => {
+    let k = 0; secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top < 140) k = i; });
+    links.forEach((a, i) => a.classList.toggle('on', i === k));
+  }, { passive: true });
+  timeline(); dates();
+})();
+</script>
+
+</body>
+</html>
